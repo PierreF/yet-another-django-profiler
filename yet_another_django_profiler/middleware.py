@@ -37,13 +37,8 @@ def func_strip_path(func_name):
 
 
 def in_request(request, parameter):
-    """Determine if the request contains the specified parameter, whether it's
-    a GET or a POST."""
-    if request.method == 'GET':
-        return parameter in request.GET
-    if request.method == 'POST':
-        return parameter in request.POST
-    return False
+    """Determine if the request contains the specified parameter."""
+    return parameter in request.GET
 
 
 def set_content(response, content):
@@ -148,12 +143,8 @@ class ProfilerMiddleware(object):
         self.profile_parameter = None
         if settings.YADP_ENABLED and in_request(request, settings.YADP_PROFILE_PARAMETER):
             self.error = None
-            if request.method == 'GET':
-                self.parameters = request.GET.copy()
-                request.GET = self.parameters
-            elif request.method == 'POST':
-                self.parameters = request.POST.copy()
-                request.POST = self.parameters
+            self.parameters = request.GET.copy()
+            request.GET = self.parameters
             self.fraction_parameter = self.get_parameter(settings.YADP_FRACTION_PARAMETER)
             self.max_calls_parameter = self.get_parameter(settings.YADP_MAX_CALLS_PARAMETER)
             self.pattern_parameter = self.get_parameter(settings.YADP_PATTERN_PARAMETER)
